@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 17
+    buildToolsVersion '20.0.0'
 
     defaultConfig {
         applicationId "com.example.denjae.androidprototype"
-        minSdkVersion 18
-        targetSdkVersion 20
+        minSdkVersion 17
+        targetSdkVersion 17
         versionCode 1
         versionName "1.0"
     }
