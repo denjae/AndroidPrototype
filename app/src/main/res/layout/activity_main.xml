@@ -62,4 +62,18 @@
         android:layout_centerHorizontal="true"
         android:indeterminate="true" />
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Bedrohungsgrad"
+        android:id="@+id/threatLevelOutput"
+        android:layout_below="@+id/progressBar"
+        android:layout_marginTop="77dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:autoText="false"
+        android:background="#ff0019ff"
+        android:textAlignment="center" />
+
 </RelativeLayout>
