@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
 
     ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    Button sendButton = (Button) findViewById(R.id.sendLocation);
+    TextView threat = (TextView) findViewById(R.id.threatLevelOutput);
 
 
     @Override
