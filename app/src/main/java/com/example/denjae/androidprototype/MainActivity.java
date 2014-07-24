@@ -4,14 +4,20 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 
 public class MainActivity extends Activity {
+
+    ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 
