@@ -9,30 +9,47 @@
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Eingabe des Ortes"
-        android:id="@+id/inputLabel"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="55dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/inputLocation"
-        android:layout_below="@+id/inputLabel"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="51dp" />
-
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ort absenden"
         android:id="@+id/sendLocation"
-        android:layout_below="@+id/inputLabel"
+        android:layout_below="@+id/plzInput"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="144dp" />
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="PLZ"
+        android:id="@+id/plzLabel"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Ort"
+        android:id="@+id/cityLabel"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/sendLocation" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/plzInput"
+        android:layout_below="@+id/plzLabel"
+        android:layout_alignParentStart="true"
+        android:text="XXXXX" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/inputCity"
+        android:layout_below="@+id/cityLabel"
+        android:layout_alignStart="@+id/cityLabel"
+        android:text="Musterstadt" />
 </RelativeLayout>
