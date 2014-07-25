@@ -26,6 +26,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     String location;
 
 
+//onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
