@@ -12,16 +12,23 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
-    Button sendButton = (Button) findViewById(R.id.sendLocation);
-    TextView threat = (TextView) findViewById(R.id.threatLevelOutput);
+    ProgressBar progressBar;
+    Button sendButton;
+    TextView threat;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findVIewsById();
         progressBar.setVisibility(View.INVISIBLE);
+    }
+//    Initialisiert die Interaktionselemente
+    private void findVIewsById() {
+        this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        this.sendButton = (Button) findViewById(R.id.sendLocation);
+        this.threat = (TextView) findViewById(R.id.threatLevelOutput);
     }
 
 
@@ -43,4 +50,15 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void onClick(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public int threatLevel(){
+        int level = 0;
+
+       return level;
+    }
+
 }
