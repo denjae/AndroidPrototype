@@ -24,6 +24,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     EditText plzInput;
     int plz;
     String location;
+    int foursquare;
 
 
 //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
@@ -86,7 +87,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Log.w("debug", "location: " + location + ", plz:" + plz);
     }
 
-    //Aus der Ermittlung der einzelnen Quellen wird in dieser Funktion der Bedrohungsgrad entwickelt 
+    //Aus der Ermittlung der einzelnen Quellen wird in dieser Funktion der Bedrohungsgrad entwickelt
     public int threatLevel(){
         int level = 0;
 
