@@ -72,7 +72,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
        return level;
     }
-    //Speichern der eingegebenen Daten beim Klicken des Senden-Buttons
+    //Speichern der eingegebenen Daten beim Klicken des Senden-Buttons.
+    //Fehlermeldung, falls eine ungueltige Postleitzahl eingegegben wird
     @Override
     public void onClick(View view) {
         try{
