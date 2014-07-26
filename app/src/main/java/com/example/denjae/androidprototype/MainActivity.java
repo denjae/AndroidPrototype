@@ -66,12 +66,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
 
-    //Methode zum Ermitteln des Bedrohungsgrades
-    public int threatLevel(){
-        int level = 0;
-
-       return level;
-    }
     //Speichern der eingegebenen Daten beim Klicken des Senden-Buttons.
     //Fehlermeldung, falls eine ungueltige Postleitzahl eingegegben wird
     @Override
@@ -92,5 +86,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Log.w("debug", "location: " + location + ", plz:" + plz);
     }
 
+    //Aus der Ermittlung der einzelnen Quellen wird in dieser Funktion der Bedrohungsgrad entwickelt 
+    public int threatLevel(){
+        int level = 0;
+
+        return level;
+    }
 
 }
