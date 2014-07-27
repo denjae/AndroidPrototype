@@ -137,7 +137,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
-        // try parse the string to a JSON object
+        // String in JSON-Objekt parsen
         try {
             jObj = new JSONObject(json);
         } catch (JSONException e) {
