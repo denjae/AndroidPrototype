@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Message;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -112,7 +108,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         this.location=location;
         String venueURL= "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
 
-        // Making HTTP request
+        // HTTP-Request ausführen
         try {
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -137,6 +133,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
             is.close();
             json = sb.toString();
+            Log.w("debug", "json" + json);
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
