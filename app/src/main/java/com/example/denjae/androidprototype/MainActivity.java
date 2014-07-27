@@ -2,9 +2,10 @@ package com.example.denjae.androidprototype;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Message;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,17 +17,19 @@ import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -38,8 +41,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     EditText plzInput;
     int plz;
     String location;
-    int foursquare;
-    String foursquareString;
+    int threatFoursquare;
+    static InputStream is = null;
+    static JSONObject jObj = null;
+    static String json = "";
 
 
 //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
@@ -90,11 +95,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         plz = Integer.parseInt(plzInput.getText().toString());
         location = cityInput.getText().toString();
         Log.w("debug", "location: " + location + ", plz:" + plz);
-        getFoursquareData(location);
-        }
+        getJSONFromForsquare(location);        }
         catch (Exception e) {
             new AlertDialog.Builder(this)
-                    .setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("erneut versuchen", new DialogInterface.OnClickListener() {
+                    .setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
@@ -103,34 +107,48 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-//Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und gibt diese als String zurueck
-    public String getFoursquareData(String location){
+//Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und wertet diese in Form eines Integers aus
+    public JSONObject getJSONFromForsquare(String location) {
         this.location=location;
         String venueURL= "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
-        StringBuilder builder = new StringBuilder();
-        HttpClient client = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(venueURL);
+
+        // Making HTTP request
         try {
-            HttpResponse response = client.execute(httpGet);
-            StatusLine statusLine = response.getStatusLine();
-            int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                HttpEntity entity = response.getEntity();
-                InputStream content = entity.getContent();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-            } else {
-                System.out.println("Error downloading files");
-            }
+            // defaultHttpClient
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(venueURL);
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            is = httpEntity.getContent();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return builder.toString();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    is, "iso-8859-1"), 8);
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "n");
+            }
+            is.close();
+            json = sb.toString();
+        } catch (Exception e) {
+            Log.e("Buffer Error", "Error converting result " + e.toString());
+        }
+        // try parse the string to a JSON object
+        try {
+            jObj = new JSONObject(json);
+        } catch (JSONException e) {
+            Log.e("JSON Parser", "Error parsing data " + e.toString());
+        }
+        // return JSON String
+        return jObj;
+
     }
 
 
