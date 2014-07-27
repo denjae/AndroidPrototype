@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -25,6 +27,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     int plz;
     String location;
     int foursquare;
+    String foursquareString;
 
 
 //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
@@ -86,6 +89,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         location = cityInput.getText().toString();
         Log.w("debug", "location: " + location + ", plz:" + plz);
     }
+
+//Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und gibt diese als String zurueck
+    public String getFoursquareData(String location){
+        this.location=location;
+        String venueURL= "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
+
+        return foursquareString;
+    }
+
 
     //Aus der Ermittlung der einzelnen Quellen wird in dieser Funktion der Bedrohungsgrad entwickelt
     public int threatLevel(){

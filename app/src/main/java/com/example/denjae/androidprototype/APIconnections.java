@@ -9,11 +9,4 @@ public class APIconnections {
     String venueURL;
     String city;
 
-    public int getFoursquare(String city){
-        this.city=city;
-        String venueURL= "https://api.foursquare.com/v2/venues/search?near="+city +"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
-
-        return foursquare;
-    }
-
 }
