@@ -14,7 +14,19 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -76,26 +88,49 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         try{
         plz = Integer.parseInt(plzInput.getText().toString());
+        location = cityInput.getText().toString();
+        Log.w("debug", "location: " + location + ", plz:" + plz);
+        getFoursquareData(location);
         }
         catch (Exception e) {
             new AlertDialog.Builder(this)
-                    .setMessage("error").setNeutralButton("test", new DialogInterface.OnClickListener() {
+                    .setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("erneut versuchen", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
                 }
             }).show();
         }
-        location = cityInput.getText().toString();
-        Log.w("debug", "location: " + location + ", plz:" + plz);
     }
 
 //Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und gibt diese als String zurueck
     public String getFoursquareData(String location){
         this.location=location;
         String venueURL= "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
-
-        return foursquareString;
+        StringBuilder builder = new StringBuilder();
+        HttpClient client = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(venueURL);
+        try {
+            HttpResponse response = client.execute(httpGet);
+            StatusLine statusLine = response.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200) {
+                HttpEntity entity = response.getEntity();
+                InputStream content = entity.getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+            } else {
+                System.out.println("Error downloading files");
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return builder.toString();
     }
 
 
