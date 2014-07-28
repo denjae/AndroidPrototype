@@ -107,7 +107,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //Aus der Ermittlung der einzelnen Quellen wird in dieser Funktion der Bedrohungsgrad entwickelt
     public int threatLevel(){
         int level = 0;
-
         return level;
     }
 

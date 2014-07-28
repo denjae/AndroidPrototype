@@ -13,6 +13,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -26,12 +29,13 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         this.progressBar = progressBar;
     }
 
-
     @Override
     protected String doInBackground(String... url) {
         HttpClient httpclient = new DefaultHttpClient();
         HttpResponse response;
         String responseString = null;
+        JSONObject json;
+
         Log.w("ba", "URL: " + url[0]);
         try {
             response = httpclient.execute(new HttpGet(url[0]));
@@ -52,6 +56,12 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
             //TODO Handle problems..
         }
         Log.w("ba", "Response: " + responseString);
+
+        try {
+            json = new JSONObject(responseString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return responseString;
 
     }
