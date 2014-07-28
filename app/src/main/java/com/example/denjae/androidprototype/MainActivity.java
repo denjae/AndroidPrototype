@@ -46,7 +46,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findVIewsById();
-        progressBar.setVisibility(View.INVISIBLE);
         sendButton.setOnClickListener(this);
 
     }
@@ -98,6 +97,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
             }).show();
         }
+
+        new AsyncRequest(progressBar).execute("URL");
     }
 
 //Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und wertet diese in Form eines Integers aus

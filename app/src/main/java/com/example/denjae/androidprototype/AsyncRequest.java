@@ -2,6 +2,8 @@ package com.example.denjae.androidprototype;
 
 
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -21,40 +23,48 @@ import java.io.InputStream;
 public class AsyncRequest extends AsyncTask<String, String, String> {
     InputStream is;
     String[] uri;
+    ProgressBar progressBar;
 
-    public AsyncRequest(String... url){
-    // HTTP-Request ausführen
+    public AsyncRequest(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
 
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse response;
-                String responseString = null;
-                try {
 
-                    response = httpclient.execute(new HttpGet(uri[0]));
-                    StatusLine statusLine = response.getStatusLine();
-                    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        response.getEntity().writeTo(out);
-                        out.close();
-                        responseString = out.toString();
-                    } else{
-                        //Closes the connection.
-                        response.getEntity().getContent().close();
-                        throw new IOException(statusLine.getReasonPhrase());
-                    }
-                } catch (ClientProtocolException e) {
-                    //TODO Handle problems..
-                } catch (IOException e) {
-                    //TODO Handle problems..
+    @Override
+    protected String doInBackground(String... url) {  HttpClient httpclient = new DefaultHttpClient();
+            HttpResponse response;
+            String responseString = null;
+            try {
+
+                response = httpclient.execute(new HttpGet(uri[0]));
+                StatusLine statusLine = response.getStatusLine();
+                if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    response.getEntity().writeTo(out);
+                    out.close();
+                    responseString = out.toString();
+                } else{
+                    //Closes the connection.
+                    response.getEntity().getContent().close();
+                    throw new IOException(statusLine.getReasonPhrase());
                 }
-                return responseString;
+            } catch (ClientProtocolException e) {
+                //TODO Handle problems..
+            } catch (IOException e) {
+                //TODO Handle problems..
             }
+            return responseString;
 
-            @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-                //Do anything with response..
-            }
-        }
-}
+    }
+
+    @Override
+    protected void onPreExecute() {
+        this.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        this.progressBar.setVisibility(View.INVISIBLE);
+        //Do anything with response..
+    }
 }
