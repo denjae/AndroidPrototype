@@ -15,18 +15,8 @@
         android:layout_height="wrap_content"
         android:text="Ort absenden"
         android:id="@+id/sendLocation"
-        android:layout_below="@+id/plzInput"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="PLZ"
-        android:id="@+id/plzLabel"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignBottom="@+id/cityInput"
+        android:layout_toEndOf="@+id/progressBar" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,46 +24,37 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Ort"
         android:id="@+id/cityLabel"
+        android:layout_toEndOf="@+id/sendLocation"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/sendLocation" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/plzInput"
-        android:layout_below="@+id/plzLabel"
-        android:layout_alignParentStart="true"
-        android:text="XXXXX"
-        android:inputType="number" />
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cityInput"
         android:layout_below="@+id/cityLabel"
-        android:layout_alignStart="@+id/cityLabel"
-        android:text="Musterstadt" />
+        android:layout_alignParentStart="true" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:layout_toStartOf="@+id/sendLocation"
+        android:layout_above="@+id/threatLevelOutput"
+        android:layout_marginBottom="50dp" />
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="180dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Bedrohungsgrad"
         android:id="@+id/threatLevelOutput"
-        android:layout_below="@+id/progressBar"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
         android:background="#ff0019ff"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp" />
 
 </RelativeLayout>

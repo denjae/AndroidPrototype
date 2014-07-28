@@ -65,6 +65,5 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         this.progressBar.setVisibility(View.INVISIBLE);
-        //Do anything with response..
     }
 }
