@@ -35,16 +35,6 @@
         android:layout_below="@+id/cityLabel"
         android:layout_alignParentStart="true" />
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:indeterminate="true"
-        android:layout_toStartOf="@+id/sendLocation"
-        android:layout_above="@+id/threatLevelOutput"
-        android:layout_marginBottom="50dp" />
-
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="180dp"
@@ -55,6 +45,15 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp" android:visibility="invisible"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/sendLocation"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp" android:visibility="invisible"/>
 
 </RelativeLayout>

@@ -34,7 +34,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     Button sendButton;
     TextView threat;
     EditText cityInput;
-    EditText plzInput;
     String location;
     int foursqareLevel;
 
@@ -78,13 +77,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
     //Speichern der eingegebenen Daten beim Klicken des Senden-Buttons.
-    //Fehlermeldung, falls eine ungueltige Postleitzahl eingegegben wird
+    //Fehlermeldung, falls ein Fehler auftritt
     @Override
     public void onClick(View view) {
         try{
-        location = cityInput.getText().toString();
-        Log.w("debug", "location: " + location);
-        getJSONFromForsquare(location);
+            getJSONFromForsquare(cityInput.getText().toString());
         }
         catch (Exception e) {
             new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
@@ -101,8 +98,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 //Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und wertet diese in Form eines Integers aus
     public int getJSONFromForsquare(String location) {
-        this.location = location;
-        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
+        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
         new AsyncRequest(progressBar).execute(urlFoursquare);
         return foursqareLevel;
     }
