@@ -37,10 +37,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     EditText plzInput;
     int plz;
     String location;
-    int threatFoursquare;
-    static InputStream is = null;
-    static JSONObject jObj = null;
-    static String json = "";
+    int foursqareLevel;
 
 
 //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
@@ -104,48 +101,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
 //Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und wertet diese in Form eines Integers aus
-    public JSONObject getJSONFromForsquare(String location) {
-        this.location=location;
-        String venueURL= "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
+    public int getJSONFromForsquare(String location) {
+        this.location = location;
+        String venueURL = "https://api.foursquare.com/v2/venues/search?near=" + location + "&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
 
-        // HTTP-Request ausführen
-        try {
-            // defaultHttpClient
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(venueURL);
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            is = httpEntity.getContent();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "iso-8859-1"), 8);
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "n");
-            }
-            is.close();
-            json = sb.toString();
-            Log.w("debug", "json" + json);
-        } catch (Exception e) {
-            Log.e("Buffer Error", "Error converting result " + e.toString());
-        }
-        // String in JSON-Objekt parsen
-        try {
-            jObj = new JSONObject(json);
-        } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
-        // return JSON String
-        return jObj;
-
+        return foursqareLevel;
     }
 
 
