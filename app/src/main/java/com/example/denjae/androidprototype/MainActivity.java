@@ -35,7 +35,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     TextView threat;
     EditText cityInput;
     EditText plzInput;
-    int plz;
     String location;
     int foursqareLevel;
 
@@ -55,7 +54,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         this.sendButton = (Button) findViewById(R.id.sendLocation);
         this.threat = (TextView) findViewById(R.id.threatLevelOutput);
         this.cityInput = (EditText) findViewById(R.id.cityInput);
-        this.plzInput = (EditText) findViewById(R.id.plzInput);
     }
 
     //Von IDE erstellt
@@ -84,28 +82,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         try{
-        plz = Integer.parseInt(plzInput.getText().toString());
         location = cityInput.getText().toString();
-        Log.w("debug", "location: " + location + ", plz:" + plz);
-        getJSONFromForsquare(location);        }
+        Log.w("debug", "location: " + location);
+        getJSONFromForsquare(location);
+        }
         catch (Exception e) {
-            new AlertDialog.Builder(this)
-                    .setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
                 }
             }).show();
+
         }
 
-        new AsyncRequest(progressBar).execute("URL");
+
     }
 
 //Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und wertet diese in Form eines Integers aus
     public int getJSONFromForsquare(String location) {
         this.location = location;
-        String venueURL = "https://api.foursquare.com/v2/venues/search?near=" + location + "&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
-
+        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
+        new AsyncRequest(progressBar).execute(urlFoursquare);
         return foursqareLevel;
     }
 
