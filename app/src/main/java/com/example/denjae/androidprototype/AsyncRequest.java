@@ -12,16 +12,13 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by denjae on 28.07.14.
  */
 public class AsyncRequest extends AsyncTask<String, String, String> {
-    InputStream is;
     String[] uri;
     ProgressBar progressBar;
 
@@ -35,7 +32,6 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
             HttpResponse response;
             String responseString = null;
             try {
-
                 response = httpclient.execute(new HttpGet(uri[0]));
                 StatusLine statusLine = response.getStatusLine();
                 if(statusLine.getStatusCode() == HttpStatus.SC_OK){
