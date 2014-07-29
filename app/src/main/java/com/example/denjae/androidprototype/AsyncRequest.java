@@ -34,7 +34,6 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         HttpClient httpclient = new DefaultHttpClient();
         HttpResponse response;
         String responseString = null;
-        JSONObject json;
 
         Log.w("ba", "URL: " + url[0]);
         try {
@@ -57,11 +56,6 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         }
         Log.w("ba", "Response: " + responseString);
 
-        try {
-            json = new JSONObject(responseString);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         return responseString;
 
     }
