@@ -86,6 +86,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
         try{
             getJSONFromForsquare(cityInput.getText().toString());
             processFinish(result);
+            Log.w("ba", result);
+
         }
         catch (Exception e) {
             new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
@@ -116,6 +118,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
 
     @Override
     public void processFinish(String output) {
-        result= output;
+        this.result= output;
     }
 }
