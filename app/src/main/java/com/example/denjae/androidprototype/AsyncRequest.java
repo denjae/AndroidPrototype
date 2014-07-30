@@ -70,6 +70,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         delegate.processFinish(result);
+        this.progressBar.setVisibility(View.INVISIBLE);
         Log.w("debug", "onPostExecute called");
     }
 }

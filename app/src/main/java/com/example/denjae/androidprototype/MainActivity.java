@@ -108,6 +108,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     public int getJSONFromForsquare(String location) {
         String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
         asyncTask.execute(urlFoursquare);
+
+
         return foursqareLevel;
     }
 
