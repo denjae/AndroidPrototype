@@ -28,14 +28,16 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener, AsyncResponse {
 
     ProgressBar progressBar;
     Button sendButton;
     TextView threat;
     EditText cityInput;
-    String location;
+    String result;
     int foursqareLevel;
+    AsyncRequest asyncTask = new AsyncRequest(progressBar);
+
 
 
 //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
@@ -80,8 +82,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //Fehlermeldung, falls ein Fehler auftritt
     @Override
     public void onClick(View view) {
+        asyncTask.delegate = this;
         try{
             getJSONFromForsquare(cityInput.getText().toString());
+            processFinish(result);
         }
         catch (Exception e) {
             new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
@@ -99,7 +103,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und wertet diese in Form eines Integers aus
     public int getJSONFromForsquare(String location) {
         String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
-        new AsyncRequest(progressBar).execute(urlFoursquare);
+        asyncTask.execute(urlFoursquare);
         return foursqareLevel;
     }
 
@@ -110,4 +114,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         return level;
     }
 
+    @Override
+    public void processFinish(String output) {
+        result= output;
+    }
 }

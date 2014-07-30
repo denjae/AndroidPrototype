@@ -24,6 +24,7 @@ import java.io.IOException;
  */
 public class AsyncRequest extends AsyncTask<String, String, String> {
     ProgressBar progressBar;
+    public AsyncResponse delegate=null;
 
     public AsyncRequest(ProgressBar progressBar) {
         this.progressBar = progressBar;
@@ -68,7 +69,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        this.progressBar.setVisibility(View.INVISIBLE);
+        delegate.processFinish(result);
         Log.w("ba", "onPostExecute called");
     }
 }
