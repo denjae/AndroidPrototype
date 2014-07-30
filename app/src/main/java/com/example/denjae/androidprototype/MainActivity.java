@@ -36,7 +36,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     EditText cityInput;
     String result;
     int foursqareLevel;
-    AsyncRequest asyncTask = new AsyncRequest(progressBar);
+    AsyncRequest asyncTask;
 
 
 
@@ -46,6 +46,10 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findVIewsById();
+
+        asyncTask = new AsyncRequest(progressBar);
+        asyncTask.delegate = this;
+
         sendButton.setOnClickListener(this);
 
     }
@@ -82,14 +86,12 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     //Fehlermeldung, falls ein Fehler auftritt
     @Override
     public void onClick(View view) {
-        asyncTask.delegate = this;
         try{
             getJSONFromForsquare(cityInput.getText().toString());
-            processFinish(result);
-            Log.w("ba", result);
-
+            //processFinish(result);
         }
         catch (Exception e) {
+            e.printStackTrace();
             new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -119,5 +121,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     @Override
     public void processFinish(String output) {
         this.result= output;
+        Log.w("debug", "result:" + output);
     }
 }

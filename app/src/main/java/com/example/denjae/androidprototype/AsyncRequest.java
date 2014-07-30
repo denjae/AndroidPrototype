@@ -36,7 +36,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         HttpResponse response;
         String responseString = null;
 
-        Log.w("ba", "URL: " + url[0]);
+        Log.w("debug", "URL: " + url[0]);
         try {
             response = httpclient.execute(new HttpGet(url[0]));
             StatusLine statusLine = response.getStatusLine();
@@ -55,7 +55,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             //TODO Handle problems..
         }
-        Log.w("ba", "Response: " + responseString);
+        Log.w("debug", "Response: " + responseString);
 
         return responseString;
 
@@ -64,12 +64,12 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         this.progressBar.setVisibility(View.VISIBLE);
-        Log.w("ba", "onPreExecute called");
+        Log.w("debug", "onPreExecute called");
     }
 
     @Override
     protected void onPostExecute(String result) {
         delegate.processFinish(result);
-        Log.w("ba", "onPostExecute called");
+        Log.w("debug", "onPostExecute called");
     }
 }
