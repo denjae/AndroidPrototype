@@ -33,8 +33,6 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         HttpClient httpclient = new DefaultHttpClient();
         HttpResponse response;
         String responseString = null;
-
-        Log.d("debug", "URL: " + url[0]);
         try {
             response = httpclient.execute(new HttpGet(url[0]));
             StatusLine statusLine = response.getStatusLine();
@@ -53,9 +51,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             //TODO Handle problems..
         }
-        Log.d("debug", "Response: " + responseString);
-
-        return responseString;
+                return responseString;
 
     }
 

@@ -39,26 +39,25 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     EditText cityInput;
     String result;
     int foursqareLevel;
-    AsyncRequest asyncTask;
+    AsyncRequest asyncRequest;
 
 
-
-
-
-//onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
+    //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findVIewsById();
-
-        asyncTask = new AsyncRequest(progressBar);
-        asyncTask.delegate = this;
-
         sendButton.setOnClickListener(this);
 
+        asyncRequest = new AsyncRequest(progressBar);
+        asyncRequest.delegate = this;
+
+
     }
-//    Initialisiert die Interaktionselemente
+
+
+    //    Initialisiert die Interaktionselemente
     private void findVIewsById() {
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         this.sendButton = (Button) findViewById(R.id.sendLocation);
@@ -73,6 +72,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
     //Von IDE erstellt
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -91,11 +91,10 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     //Fehlermeldung, falls ein Fehler auftritt
     @Override
     public void onClick(View view) {
-        try{
+        try {
             getJSONFromForsquare(cityInput.getText().toString());
-            //processFinish(result);
-        }
-        catch (Exception e) {
+            threatFoursqure(result);
+        } catch (Exception e) {
             e.printStackTrace();
             new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
                 @Override
@@ -109,18 +108,23 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
 
     }
 
-//Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und wertet diese in Form eines Integers aus
-    public int getJSONFromForsquare(String location) {
-        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
-        asyncTask.execute(urlFoursquare);
+    //Ruft die Ergebnisse der eingegebenen Stadt von Foursquare ab und wertet diese in Form eines Integers aus
+    public void getJSONFromForsquare(String location){
+        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
+        asyncRequest.execute(urlFoursquare);
+       }
+
+
+    public int threatFoursqure (String result){
+        Log.d("debug","result" + result);
+
+
         return foursqareLevel;
     }
 
-
-
     @Override
     public void processFinish(String output) {
-        this.result= output;
-        Log.d("debug", "result:" + output);
+        this.result=output;
+
     }
 }
