@@ -14,21 +14,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutionException;
 
 
@@ -41,7 +29,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     String result;
     int foursqareLevel;
     AsyncRequest asyncRequest;
-
+    JSONObject json;
+    JSONArray jsonArray;
 
     //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
     @Override
@@ -116,9 +105,38 @@ public class MainActivity extends Activity implements View.OnClickListener{
        }
 
 
-    public int threatFoursqure () throws ExecutionException, InterruptedException {
+    public int threatFoursqure () throws ExecutionException, InterruptedException, JSONException {
         result= asyncRequest.get();
         Log.d("debug","result" + result);
+        result = asyncRequest.get();
+        Log.d("debug", "result from asyncRequest" +result);
+        json = new JSONObject(result);
+        Log.d("debug", "jsonArray" +json);
+        for (int i = 0; i < json.length(); i++) {
+            Log.d("debug", "for-loop with i");
+            try {
+                jsonArray = new JSONArray(json.getString("stats"));
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+            for (int j = 0; j < jsonArray.length(); j++) {
+                Log.d("debug", "for-loop with j");
+                try {
+                    foursqareLevel += jsonArray.getInt(j);
+                } catch (JSONException e1) {
+                    new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung des Arrays").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
+                }
+            }
+
+        }
+
+
+        Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
 
 
         return foursqareLevel;
