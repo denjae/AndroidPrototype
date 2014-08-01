@@ -13,8 +13,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,7 +34,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         HttpResponse response;
         String responseString = null;
 
-        Log.w("debug", "URL: " + url[0]);
+        Log.d("debug", "URL: " + url[0]);
         try {
             response = httpclient.execute(new HttpGet(url[0]));
             StatusLine statusLine = response.getStatusLine();
@@ -55,7 +53,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             //TODO Handle problems..
         }
-        Log.w("debug", "Response: " + responseString);
+        Log.d("debug", "Response: " + responseString);
 
         return responseString;
 
@@ -64,13 +62,13 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         this.progressBar.setVisibility(View.VISIBLE);
-        Log.w("debug", "onPreExecute called");
+        Log.d("debug", "onPreExecute called");
     }
 
     @Override
     protected void onPostExecute(String result) {
         delegate.processFinish(result);
         this.progressBar.setVisibility(View.INVISIBLE);
-        Log.w("debug", "onPostExecute called");
+        Log.d("debug", "onPostExecute called");
     }
 }

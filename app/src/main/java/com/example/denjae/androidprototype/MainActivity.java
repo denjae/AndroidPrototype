@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +23,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 
@@ -37,6 +40,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     String result;
     int foursqareLevel;
     AsyncRequest asyncTask;
+
+
 
 
 
@@ -108,8 +113,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     public int getJSONFromForsquare(String location) {
         String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near="+location+"&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
         asyncTask.execute(urlFoursquare);
-
-
         return foursqareLevel;
     }
 
@@ -123,6 +126,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     @Override
     public void processFinish(String output) {
         this.result= output;
-        Log.w("debug", "result:" + output);
+        Log.d("debug", "result:" + output);
     }
 }
