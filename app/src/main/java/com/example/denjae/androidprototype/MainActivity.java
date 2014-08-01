@@ -32,7 +32,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends Activity implements View.OnClickListener, AsyncResponse {
+public class MainActivity extends Activity implements View.OnClickListener{
 
     ProgressBar progressBar;
     Button sendButton;
@@ -52,7 +52,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
         sendButton.setOnClickListener(this);
 
         asyncRequest = new AsyncRequest(progressBar);
-        asyncRequest.delegate = this;
+
 
 
     }
@@ -124,9 +124,4 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
         return foursqareLevel;
     }
 
-    @Override
-    public void processFinish(String output) {
-        this.result=output;
-
-    }
 }
