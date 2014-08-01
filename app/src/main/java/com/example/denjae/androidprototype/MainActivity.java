@@ -117,11 +117,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     }
 
 
-    //Aus der Ermittlung der einzelnen Quellen wird in dieser Funktion der Bedrohungsgrad entwickelt
-    public int threatLevel(){
-        int level = 0;
-        return level;
-    }
 
     @Override
     public void processFinish(String output) {
