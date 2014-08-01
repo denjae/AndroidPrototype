@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends Activity implements View.OnClickListener, AsyncResponse {
@@ -93,7 +94,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
     public void onClick(View view) {
         try {
             getJSONFromForsquare(cityInput.getText().toString());
-            threatFoursqure(result);
+            threatFoursqure();
         } catch (Exception e) {
             e.printStackTrace();
             new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
@@ -115,7 +116,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Asyn
        }
 
 
-    public int threatFoursqure (String result){
+    public int threatFoursqure () throws ExecutionException, InterruptedException {
+        result= asyncRequest.get();
         Log.d("debug","result" + result);
 
 
