@@ -104,6 +104,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         for (int i = 0; i < json.length(); i++) {
             Log.d("debug", "Loop stated");
             Log.d("debug", "Created json object" + json);
+
+            //TODO Parsen des Objektes funktioniert, hier dann Verarbeitung einfuegen
+
             foursqareLevel+= json.getInt("tipCount");
 
            // foursqareLevel += json.getJSONObject("stats").getInt("tipCount");
