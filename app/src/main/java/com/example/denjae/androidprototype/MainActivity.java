@@ -99,7 +99,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public int threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
         foursqareLevel=0;
         String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&limit=3&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
-        json = new JSONObject(asyncRequest.execute(urlFoursquare).get());
+        json = new JSONObject();
+        json = asyncRequest.execute(urlFoursquare).get();
         for (int i = 0; i < json.length(); i++) {
             Log.d("debug", "Loop stated");
             Log.d("debug", "Created json object" + json);

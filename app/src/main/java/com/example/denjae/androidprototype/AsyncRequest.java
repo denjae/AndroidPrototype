@@ -13,6 +13,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,7 +22,7 @@ import java.io.IOException;
 /**
  * Created by denjae on 28.07.14.
  */
-public class AsyncRequest extends AsyncTask<String, String, String> {
+public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
     ProgressBar progressBar;
 
     public AsyncRequest(ProgressBar progressBar) {
@@ -28,10 +30,10 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected String doInBackground(String... url) {
+    protected JSONObject doInBackground(String... url) {
         HttpClient httpclient = new DefaultHttpClient();
         HttpResponse response;
-        String responseString = null;
+        JSONObject responseJson = null;
         try {
             response = httpclient.execute(new HttpGet(url[0]));
             StatusLine statusLine = response.getStatusLine();
@@ -39,7 +41,11 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 response.getEntity().writeTo(out);
                 out.close();
-                responseString = out.toString();
+                try {
+                    responseJson = new JSONObject(out.toString());
+                } catch (JSONException e) {
+                    Log.d("debug", "ERROR parsing the json object");
+                }
             } else{
                 //Closes the connection.
                 response.getEntity().getContent().close();
@@ -50,7 +56,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             //TODO Handle problems..
         }
-                return responseString;
+                return responseJson;
 
     }
 
@@ -61,7 +67,7 @@ public class AsyncRequest extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(JSONObject resultJson) {
         this.progressBar.setVisibility(View.INVISIBLE);
         Log.d("debug", "onPostExecute called");
     }
