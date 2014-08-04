@@ -52,9 +52,9 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
                 throw new IOException(statusLine.getReasonPhrase());
             }
         } catch (ClientProtocolException e) {
-            //TODO Handle problems..
+            Log.d("debug", "ERROR receiving HTTP");
         } catch (IOException e) {
-            //TODO Handle problems..
+            Log.d("debug", "ERROR receiving HTTP");
         }
                 return responseJson;
 
