@@ -100,7 +100,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     public int threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
         foursqareLevel = 0;
-        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&limit=2&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
+        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
         json = new JSONObject();
         json = asyncRequest.execute(urlFoursquare).get();
 
@@ -117,6 +117,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         Log.d("debug", "Created json stats" + jsonArray);
         Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
+        recreate();
 
         return foursqareLevel;
     }

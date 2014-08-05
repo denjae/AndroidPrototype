@@ -70,5 +70,6 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
     protected void onPostExecute(JSONObject resultJson) {
         this.progressBar.setVisibility(View.INVISIBLE);
         Log.d("debug", "onPostExecute called");
+
     }
 }
