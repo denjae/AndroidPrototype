@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     AsyncRequest asyncRequest;
     JSONObject json;
     JSONObject jsonStats;
+    JSONArray jsonArray;
+
 
     //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
     @Override
@@ -96,29 +99,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
     public int threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
-        foursqareLevel=0;
-        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near="+location+"&limit=2&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
+        foursqareLevel = 0;
+        String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&limit=2&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
         json = new JSONObject();
         json = asyncRequest.execute(urlFoursquare).get();
-       // for (int i = 0; i < json.length(); i++) {
-         //   Log.d("debug", "Loop stated");
-            Log.d("debug", "Created json object" + json);
 
-            //TODO Parsen des Objektes funktioniert, hier dann Verarbeitung einfuegen
+        jsonArray = new JSONArray();
+        jsonArray = json.getJSONObject("response").getJSONArray("venues");
 
-            jsonStats= json.put("stats", jsonStats);
-            //foursqareLevel+= jsonStats.getInt("checkinsCount");
-            //foursqareLevel+= jsonStats.getInt("tipCount");
-            //foursqareLevel+= jsonStats.getInt("usersCount");
-            Log.d("debug", "Loop stated");
-            Log.d("debug", "Created json object" + json);
-            Log.d("debug", "Created json stats" + jsonStats);
+        Log.d("debug", "Created json Array" + jsonArray);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            foursqareLevel+=jsonArray.getJSONObject(i).getJSONObject("stats").getInt("checkinsCount");
+            foursqareLevel+=jsonArray.getJSONObject(i).getJSONObject("stats").getInt("tipCount");
+            foursqareLevel+=jsonArray.getJSONObject(i).getJSONObject("stats").getInt("usersCount");
+            }
 
-           // foursqareLevel += json.getJSONObject("stats").getInt("tipCount");
-           // foursqareLevel += json.getJSONObject("stats").getInt("usersCount");
-       // }
 
-       // Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
+        Log.d("debug", "Created json stats" + jsonArray);
+        Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
 
         return foursqareLevel;
     }
