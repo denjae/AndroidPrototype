@@ -106,6 +106,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
         if (view == recreate){
+            cityInput.setText("");
             recreate();
         }
     }
