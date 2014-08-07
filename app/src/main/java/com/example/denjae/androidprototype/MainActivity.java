@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +27,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     ProgressBar progressBar;
     Button sendButton;
+    Button recreate;
     TextView threatLevelOutput;
     EditText cityInput;
     int foursqareLevel;
@@ -41,6 +43,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         findVIewsById();
         sendButton.setOnClickListener(this);
+        recreate.setOnClickListener(this);
         asyncRequest = new AsyncRequest(progressBar);
 
 
@@ -53,6 +56,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         this.sendButton = (Button) findViewById(R.id.sendLocation);
         this.threatLevelOutput = (TextView) findViewById(R.id.threatLevelOutput);
         this.cityInput = (EditText) findViewById(R.id.cityInput);
+        this.recreate = (Button) findViewById(R.id.recreate);
     }
 
     //Von IDE erstellt
@@ -81,25 +85,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //Fehlermeldung, falls ein Fehler auftritt
     @Override
     public void onClick(View view) {
-        try {
-            threatFoursqure(cityInput.getText().toString());
-            InputMethodManager inputManager = (InputMethodManager)
-                    getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(view == sendButton) {
+            try {
+                threatFoursqure(cityInput.getText().toString());
+                InputMethodManager inputManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
 
-            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();
 
+            }
+        }
+        if (view == recreate){
+            recreate();
         }
     }
+
 
 
     public void threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
