@@ -2,12 +2,14 @@ package com.example.denjae.androidprototype;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -24,12 +26,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     ProgressBar progressBar;
     Button sendButton;
-    TextView threat;
+    TextView threatLevelOutput;
     EditText cityInput;
     int foursqareLevel;
     AsyncRequest asyncRequest;
     JSONObject json;
-    JSONObject jsonStats;
     JSONArray jsonArray;
 
 
@@ -40,7 +41,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         findVIewsById();
         sendButton.setOnClickListener(this);
-
         asyncRequest = new AsyncRequest(progressBar);
 
 
@@ -51,7 +51,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void findVIewsById() {
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         this.sendButton = (Button) findViewById(R.id.sendLocation);
-        this.threat = (TextView) findViewById(R.id.threatLevelOutput);
+        this.threatLevelOutput = (TextView) findViewById(R.id.threatLevelOutput);
         this.cityInput = (EditText) findViewById(R.id.cityInput);
     }
 
@@ -83,6 +83,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         try {
             threatFoursqure(cityInput.getText().toString());
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+
         } catch (Exception e) {
             e.printStackTrace();
             new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
@@ -93,12 +99,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }).show();
 
         }
-
-
     }
 
 
-    public int threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
+    public void threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
         foursqareLevel = 0;
         String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
         json = new JSONObject();
@@ -109,17 +113,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         Log.d("debug", "Created json Array" + jsonArray);
         for (int i = 0; i < jsonArray.length(); i++) {
-            foursqareLevel+=jsonArray.getJSONObject(i).getJSONObject("stats").getInt("checkinsCount");
-            foursqareLevel+=jsonArray.getJSONObject(i).getJSONObject("stats").getInt("tipCount");
-            foursqareLevel+=jsonArray.getJSONObject(i).getJSONObject("stats").getInt("usersCount");
-            }
-
-
+            foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("checkinsCount");
+            foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("tipCount");
+            foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("usersCount");
+        }
         Log.d("debug", "Created json stats" + jsonArray);
         Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
-        recreate();
 
-        return foursqareLevel;
+        threatLevelOutput.setText((((Integer) foursqareLevel)).toString());
     }
 
 }
