@@ -85,7 +85,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //Fehlermeldung, falls ein Fehler auftritt
     @Override
     public void onClick(View view) {
-        if(view == sendButton) {
+        if (view == sendButton) {
             try {
                 threatFoursqure(cityInput.getText().toString());
                 InputMethodManager inputManager = (InputMethodManager)
@@ -105,12 +105,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             }
         }
-        if (view == recreate){
+        if (view == recreate) {
             cityInput.setText("");
             recreate();
         }
     }
-
 
 
     public void threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
@@ -131,7 +130,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Log.d("debug", "Created json stats" + jsonArray);
         Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
 
-        threatLevelOutput.setText((((Integer) foursqareLevel)).toString());
+        if (foursqareLevel <= 7000) {
+            threatLevelOutput.setText("Unwahrscheinliche Bedrohung");
+            threatLevelOutput.setBackgroundColor(Color.CYAN);
+        }
+        else if (foursqareLevel > 7000 && foursqareLevel <= 14000) {
+            threatLevelOutput.setText("Geringer Bedrohungsgrad");
+            threatLevelOutput.setBackgroundColor(Color.GREEN);
+        }
+        else if (foursqareLevel > 14000 && foursqareLevel <= 21000) {
+            threatLevelOutput.setText("Mittlerer Bedrohungsgrad");
+            threatLevelOutput.setBackgroundColor(Color.YELLOW);
+        } else {
+            threatLevelOutput.setText("Hoher Bedrohungsgrad");
+            threatLevelOutput.setBackgroundColor(Color.RED);
+        }
     }
 
+
 }
+
