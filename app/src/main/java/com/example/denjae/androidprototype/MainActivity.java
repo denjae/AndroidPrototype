@@ -35,6 +35,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     JSONObject json;
     JSONArray jsonArray;
 
+    int foursquare;
+
 
     //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
     @Override
@@ -87,7 +89,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         if (view == sendButton) {
             try {
-                threatFoursqure(cityInput.getText().toString());
+                threatLevel(cityInput.getText().toString());
                 InputMethodManager inputManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -112,7 +114,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
 
-    public void threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
+    public void threatLevel(String location) throws ExecutionException, InterruptedException, JSONException {
+      foursquare =threatFoursqure(location);
+
+        if (foursquare<= 9300) {
+            threatLevelOutput.setText("Geringer Bedrohungsgrad");
+            threatLevelOutput.setBackgroundColor(Color.GREEN);
+        }
+        else if (foursquare> 9300 && foursquare<= 18000) {
+            threatLevelOutput.setText("Mittlerer Bedrohungsgrad");
+            threatLevelOutput.setBackgroundColor(Color.YELLOW);
+        }
+        else {
+            threatLevelOutput.setText("Hoher Bedrohungsgrad");
+            threatLevelOutput.setBackgroundColor(Color.RED);
+        }
+    }
+
+    private int threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
         foursqareLevel = 0;
         String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
         json = new JSONObject();
@@ -130,21 +149,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Log.d("debug", "Created json stats" + jsonArray);
         Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
 
-        if (foursqareLevel <= 7000) {
-            threatLevelOutput.setText("Unwahrscheinliche Bedrohung");
-            threatLevelOutput.setBackgroundColor(Color.CYAN);
-        }
-        else if (foursqareLevel > 7000 && foursqareLevel <= 14000) {
-            threatLevelOutput.setText("Geringer Bedrohungsgrad");
-            threatLevelOutput.setBackgroundColor(Color.GREEN);
-        }
-        else if (foursqareLevel > 14000 && foursqareLevel <= 21000) {
-            threatLevelOutput.setText("Mittlerer Bedrohungsgrad");
-            threatLevelOutput.setBackgroundColor(Color.YELLOW);
-        } else {
-            threatLevelOutput.setText("Hoher Bedrohungsgrad");
-            threatLevelOutput.setBackgroundColor(Color.RED);
-        }
+        return foursqareLevel;
+
     }
 
 
