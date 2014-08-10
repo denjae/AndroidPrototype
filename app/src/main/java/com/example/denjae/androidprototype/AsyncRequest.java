@@ -30,6 +30,7 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
     }
 
     @Override
+    //Führt die asynchrone Abfrage an den jeweiligen Dienstanbieter aus. Die Abfrage wird via GET im REST-Stil durchgeführt.
     protected JSONObject doInBackground(String... url) {
         HttpClient httpclient = new DefaultHttpClient();
         HttpResponse response;
@@ -37,7 +38,7 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
         try {
             response = httpclient.execute(new HttpGet(url[0]));
             StatusLine statusLine = response.getStatusLine();
-            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+            if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 response.getEntity().writeTo(out);
                 out.close();
@@ -46,8 +47,8 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
                 } catch (JSONException e) {
                     Log.d("debug", "ERROR parsing the json object");
                 }
-            } else{
-                //Closes the connection.
+            } else {
+                //Verbindung schließen
                 response.getEntity().getContent().close();
                 throw new IOException(statusLine.getReasonPhrase());
             }
@@ -56,16 +57,18 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
         } catch (IOException e) {
             Log.d("debug", "ERROR receiving HTTP");
         }
-                return responseJson;
+        return responseJson;
 
     }
 
+    //Vor Beginn der Abfrage wird der Ladebalken sichtbar erstellt
     @Override
     protected void onPreExecute() {
         this.progressBar.setVisibility(View.VISIBLE);
         Log.d("debug", "onPreExecute called");
     }
 
+    //Wenn die Abfrage abgeschlossen ist, wird der Ladebalken entfernt
     @Override
     protected void onPostExecute(JSONObject resultJson) {
         this.progressBar.setVisibility(View.INVISIBLE);

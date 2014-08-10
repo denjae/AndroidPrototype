@@ -38,7 +38,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     int foursquare;
 
 
-    //onCreate-Methode. Interaktionselemente werden initialisiert, ein Klick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
+    //onCreate-Methode. Interaktionselemente werden initialisiert, ein onClick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
+    //Alternativ wird für den restart-Button die Applikation aktualisiert
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,12 +91,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (view == sendButton) {
             try {
                 threatLevel(cityInput.getText().toString());
+                //Versteckt die Tastatur nach Absenden der Anfrage
                 InputMethodManager inputManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
 
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
+                //Meldung im Fehlerfall
             } catch (Exception e) {
                 e.printStackTrace();
                 new AlertDialog.Builder(this).setMessage("Fehler bei der Verarbeitung der Daten").setNeutralButton("Erneut versuchen", new DialogInterface.OnClickListener() {
@@ -107,30 +110,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             }
         }
+        //Aktualisiert die Anwendung
         if (view == recreate) {
             cityInput.setText("");
             recreate();
         }
     }
 
-
+    //Es werden die ermittelten Werte zusammengetragen und daraus der Bedrohungsgrad bestimmt. Die if-Anweisungen bestimmen Bedrohungsgrad und die Färbung der Ausgabebox
     public void threatLevel(String location) throws ExecutionException, InterruptedException, JSONException {
-      foursquare =threatFoursqure(location);
+        foursquare = threatFoursqure(location);
 
-        if (foursquare<= 9300) {
+        if (foursquare <= 9300) {
             threatLevelOutput.setText("Geringer Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.GREEN);
-        }
-        else if (foursquare> 9300 && foursquare<= 18000) {
+        } else if (foursquare > 9300 && foursquare <= 18000) {
             threatLevelOutput.setText("Mittlerer Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.YELLOW);
-        }
-        else {
+        } else {
             threatLevelOutput.setText("Hoher Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.RED);
         }
     }
 
+    //Fragt die Werte ab, die über den Ort von Foursquare bestimmt werden
     private int threatFoursqure(String location) throws ExecutionException, InterruptedException, JSONException {
         foursqareLevel = 0;
         String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
@@ -139,7 +142,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         jsonArray = new JSONArray();
         jsonArray = json.getJSONObject("response").getJSONArray("venues");
-
+        //Werte aus dem json-Objekt abfragen
         Log.d("debug", "Created json Array" + jsonArray);
         for (int i = 0; i < jsonArray.length(); i++) {
             foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("checkinsCount");
