@@ -61,7 +61,7 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
 
     }
 
-    //Vor Beginn der Abfrage wird der Ladebalken sichtbar erstellt
+    //Vor Beginn der Abfrage wird der Ladebalken erstellt
     @Override
     protected void onPreExecute() {
         this.progressBar.setVisibility(View.VISIBLE);
