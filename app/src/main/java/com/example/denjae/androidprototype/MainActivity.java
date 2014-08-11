@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -34,6 +38,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     AsyncRequest asyncRequest;
     JSONObject json;
     JSONArray jsonArray;
+    int wlanLevel;
+    double lat;
+    double lon;
+
 
     int foursquare;
 
@@ -118,8 +126,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     //Es werden die ermittelten Werte zusammengetragen und daraus der Bedrohungsgrad bestimmt. Die if-Anweisungen bestimmen Bedrohungsgrad und die Färbung der Ausgabebox
-    public void threatLevel(String location) throws ExecutionException, InterruptedException, JSONException {
+    public void threatLevel(String location) throws ExecutionException, InterruptedException, JSONException, IOException {
         foursquare = threatFoursqure(location);
+        try {
+            int wlan = threatWlan(location);
+        } catch (IOException e) {
+            Log.d("debug", "Fehler threatWlan");
+        }
 
         if (foursquare <= 9300) {
             threatLevelOutput.setText("Geringer Bedrohungsgrad");
@@ -156,6 +169,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
+    public int threatWlan(String location) throws IOException {
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
 
+        try {
+            address = coder.getFromLocationName(location, 5);
+            if (address == null) {
+                return 0;
+            }
+            Address adress = address.get(0);
+            lat =  adress.getLatitude();
+            lon =  adress.getLongitude();
+
+        } catch (Exception e) {
+            Log.d("debug", "Fehler beim Erhalt lat und lon");
+        }
+        String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat="+lat+"&lng="+lon+"&distance=10&apikey=6dd08f8a479ec50a0f5b5eb14fd7736e";
+
+
+        return wlanLevel;
+    }
 }
+
 
