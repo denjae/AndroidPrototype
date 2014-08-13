@@ -37,13 +37,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     int foursqareLevel;
     AsyncRequest asyncRequest;
     JSONObject json;
+    JSONObject jsonWlan;
     JSONArray jsonArray;
     int wlanLevel;
     double lat;
     double lon;
-
-
     int foursquare;
+    int wlan;
+    JSONObject tmp;
 
 
     //onCreate-Methode. Interaktionselemente werden initialisiert, ein onClick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
@@ -128,6 +129,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     //Es werden die ermittelten Werte zusammengetragen und daraus der Bedrohungsgrad bestimmt. Die if-Anweisungen bestimmen Bedrohungsgrad und die Färbung der Ausgabebox
     public void threatLevel(String location) throws ExecutionException, InterruptedException, JSONException, IOException {
         foursquare = threatFoursqure(location);
+        wlan = threatWlan(location);
         try {
             int wlan = threatWlan(location);
         } catch (IOException e) {
@@ -169,9 +171,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
-    public int threatWlan(String location) throws IOException {
+    public int threatWlan(String location) throws IOException, ExecutionException, InterruptedException {
         Geocoder coder = new Geocoder(this);
         List<Address> address;
+        wlanLevel = 0;
 
         try {
             address = coder.getFromLocationName(location, 5);
@@ -187,7 +190,65 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
         String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat="+lat+"&lng="+lon+"&distance=10&apikey=6dd08f8a479ec50a0f5b5eb14fd7736e";
 
+        String testJson = "{\n" +
+                "    \"apiVersion\": \"2\",\n" +
+                "    \"distance\": \"5\",\n" +
+                "    \"latitude\": \"51.02667\",\n" +
+                "    \"longitude\": \"7.56928\",\n" +
+                "    \"networkRank\": {\n" +
+                "        \"network26202\": {\n" +
+                "            \"type2G\": {\n" +
+                "                \"averageRssiAsu\": \"9.351622\",\n" +
+                "                \"averageRssiDb\": \"-94.296757\",\n" +
+                "                \"networkId\": \"26202\",\n" +
+                "                \"networkName\": \"Vodafone.de\",\n" +
+                "                \"networkType\": \"2\",\n" +
+                "                \"sampleSizeRSSI\": \"35481\"\n" +
+                "            },\n" +
+                "            \"type3G\": {\n" +
+                "                \"averageRssiAsu\": \"13.209795\",\n" +
+                "                \"averageRssiDb\": \"-102.790205\",\n" +
+                "                \"networkId\": \"26202\",\n" +
+                "                \"networkName\": \"Vodafone.de\",\n" +
+                "                \"networkType\": \"3\",\n" +
+                "                \"sampleSizeRSSI\": \"2049\"\n" +
+                "            }\n" +
+                "        },\n" +
+                "        \"network26207\": {\n" +
+                "            \"type3G\": {\n" +
+                "                \"averageRssiAsu\": \"7.571271\",\n" +
+                "                \"averageRssiDb\": \"-108.428729\",\n" +
+                "                \"networkId\": \"26207\",\n" +
+                "                \"networkName\": \"o2 - de\",\n" +
+                "                \"networkType\": \"3\",\n" +
+                "                \"sampleSizeRSSI\": \"1905\"\n" +
+                "            }\n" +
+                "        }\n" +
+                "    },\n" +
+                "    \"network_type\": null,\n" +
+                "    \"perMinuteCurrent\": 1,\n" +
+                "    \"perMinuteLimit\": 10,\n" +
+                "    \"perMonthCurrent\": 1,\n" +
+                "    \"perMonthLimit\": 2000\n" +
+                "}\n";
 
+        try {
+            jsonWlan = new JSONObject(testJson);
+        } catch (JSONException e) {
+            Log.d("debug", "Fehler beim Erstellen des Teststrings");
+        }
+        Log.d("debug", "TestString" +jsonWlan);
+        //jsonWlan = json = asyncRequest.execute(urlWlan).get();
+
+        try {
+            tmp = jsonWlan.getJSONObject("networkRank");
+        } catch (JSONException e) {
+            Log.d("debug", "Fehler beim Erstellen tmp-Objekt");
+        }
+
+        wlanLevel= tmp.length();
+
+        Log.d("debug", "Laenge"+ wlanLevel);
         return wlanLevel;
     }
 }
