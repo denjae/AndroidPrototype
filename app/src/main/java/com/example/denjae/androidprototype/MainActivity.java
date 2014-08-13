@@ -57,8 +57,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         sendButton.setOnClickListener(this);
         recreate.setOnClickListener(this);
         asyncRequest = new AsyncRequest(progressBar);
-
-
     }
 
 
@@ -127,14 +125,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     //Es werden die ermittelten Werte zusammengetragen und daraus der Bedrohungsgrad bestimmt. Die if-Anweisungen bestimmen Bedrohungsgrad und die Färbung der Ausgabebox
-    public void threatLevel(String location) throws ExecutionException, InterruptedException, JSONException, IOException {
+    public void threatLevel(String location) throws InterruptedException, ExecutionException, JSONException, IOException {
         foursquare = threatFoursqure(location);
         wlan = threatWlan(location);
-        try {
-            int wlan = threatWlan(location);
-        } catch (IOException e) {
-            Log.d("debug", "Fehler threatWlan");
-        }
+
 
         if (foursquare <= 9300) {
             threatLevelOutput.setText("Geringer Bedrohungsgrad");
@@ -184,61 +178,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Address adress = address.get(0);
             lat =  adress.getLatitude();
             lon =  adress.getLongitude();
+            Log.d("debug", "lat" +lat);
+            Log.d("debug", "lon" +lon);
 
         } catch (Exception e) {
             Log.d("debug", "Fehler beim Erhalt lat und lon");
         }
-        String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat="+lat+"&lng="+lon+"&distance=10&apikey=6dd08f8a479ec50a0f5b5eb14fd7736e";
-
-        String testJson = "{\n" +
-                "    \"apiVersion\": \"2\",\n" +
-                "    \"distance\": \"5\",\n" +
-                "    \"latitude\": \"51.02667\",\n" +
-                "    \"longitude\": \"7.56928\",\n" +
-                "    \"networkRank\": {\n" +
-                "        \"network26202\": {\n" +
-                "            \"type2G\": {\n" +
-                "                \"averageRssiAsu\": \"9.351622\",\n" +
-                "                \"averageRssiDb\": \"-94.296757\",\n" +
-                "                \"networkId\": \"26202\",\n" +
-                "                \"networkName\": \"Vodafone.de\",\n" +
-                "                \"networkType\": \"2\",\n" +
-                "                \"sampleSizeRSSI\": \"35481\"\n" +
-                "            },\n" +
-                "            \"type3G\": {\n" +
-                "                \"averageRssiAsu\": \"13.209795\",\n" +
-                "                \"averageRssiDb\": \"-102.790205\",\n" +
-                "                \"networkId\": \"26202\",\n" +
-                "                \"networkName\": \"Vodafone.de\",\n" +
-                "                \"networkType\": \"3\",\n" +
-                "                \"sampleSizeRSSI\": \"2049\"\n" +
-                "            }\n" +
-                "        },\n" +
-                "        \"network26207\": {\n" +
-                "            \"type3G\": {\n" +
-                "                \"averageRssiAsu\": \"7.571271\",\n" +
-                "                \"averageRssiDb\": \"-108.428729\",\n" +
-                "                \"networkId\": \"26207\",\n" +
-                "                \"networkName\": \"o2 - de\",\n" +
-                "                \"networkType\": \"3\",\n" +
-                "                \"sampleSizeRSSI\": \"1905\"\n" +
-                "            }\n" +
-                "        }\n" +
-                "    },\n" +
-                "    \"network_type\": null,\n" +
-                "    \"perMinuteCurrent\": 1,\n" +
-                "    \"perMinuteLimit\": 10,\n" +
-                "    \"perMonthCurrent\": 1,\n" +
-                "    \"perMonthLimit\": 2000\n" +
-                "}\n";
+        String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat="+lat+"&lng="+lon+"&distance=10&apikey=e65336073b1a9853cd5755e92dba465c";
+        Log.d("debug", "URL" +urlWlan);
 
         try {
-            jsonWlan = new JSONObject(testJson);
-        } catch (JSONException e) {
-            Log.d("debug", "Fehler beim Erstellen des Teststrings");
+            jsonWlan = new JSONObject();
+            jsonWlan =  asyncRequest.execute(urlWlan).get();
+            Log.d("debug", "TestString" + jsonWlan);
         }
-        Log.d("debug", "TestString" +jsonWlan);
-        //jsonWlan = json = asyncRequest.execute(urlWlan).get();
+        catch (Exception e){
+            Log.d("debug","Fehler bei Erhalt wlan Zeug" );
+        }
 
         try {
             tmp = jsonWlan.getJSONObject("networkRank");
