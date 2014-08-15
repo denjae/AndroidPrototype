@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +46,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     int foursquare;
     int wlan;
     JSONObject tmp;
+    int result;
+    int resultFoursquare;
 
 
     //onCreate-Methode. Interaktionselemente werden initialisiert, ein onClick-Listener auf den Senden-Button gesetzt und der ProgressBar-Balken versteckt
@@ -131,12 +132,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void threatLevel(String location) throws InterruptedException, ExecutionException, JSONException, IOException {
         foursquare = threatFoursqure(location);
         wlan = threatWlan(location);
+        result = wlan + foursquare;
 
 
-        if (foursquare <= 9300) {
+        if (result ==3 || result ==4) {
             threatLevelOutput.setText("Geringer Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.GREEN);
-        } else if (foursquare > 9300 && foursquare <= 18000) {
+        } else if (result ==5 || result ==6) {
             threatLevelOutput.setText("Mittlerer Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.YELLOW);
         } else {
@@ -161,10 +163,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
             foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("usersCount");
         }
 
+        if (foursqareLevel <= 2500) {
+            resultFoursquare = 1;
+        } else if (foursqareLevel > 2500 && foursqareLevel <= 12500) {
+            resultFoursquare = 2;
+        } else {
+            resultFoursquare = 3;
+        }
         Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
-
         return foursqareLevel;
-
     }
 
     public int threatWlan(String location) throws IOException, ExecutionException, InterruptedException {
@@ -178,21 +185,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 return 0;
             }
             Address adress = address.get(0);
-            lat =  adress.getLatitude();
-            lon =  adress.getLongitude();
+            lat = adress.getLatitude();
+            lon = adress.getLongitude();
 
         } catch (Exception e) {
             Log.d("debug", "Fehler beim Erhalt lat und lon");
         }
-        String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat="+lat+"&lng="+lon+"&distance=10&apikey=e65336073b1a9853cd5755e92dba465c";
-        Log.d("debug", "URL" +urlWlan);
+        String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat=" + lat + "&lng=" + lon + "&distance=10&apikey=e65336073b1a9853cd5755e92dba465c";
+        Log.d("debug", "URL" + urlWlan);
 
         try {
             jsonWlan = new JSONObject();
-            jsonWlan =  asyncRequestWlan.execute(urlWlan).get();
-                   }
-        catch (Exception e){
-            Log.d("debug","Fehler bei Erhalt wlan Zeug" );
+            jsonWlan = asyncRequestWlan.execute(urlWlan).get();
+        } catch (Exception e) {
+            Log.d("debug", "Fehler bei Erhalt wlan Zeug");
         }
 
         try {
@@ -201,8 +207,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Log.d("debug", "Fehler beim Erstellen tmp-Objekt");
         }
 
-        wlanLevel= tmp.length();
-
+        if (tmp.length() == 4) {
+            wlanLevel = 2;
+        } else if (tmp.length() == 3) {
+            wlanLevel = 3;
+        } else {
+            wlanLevel = 4;
+        }
         Log.d("debug", "Laenge" + wlanLevel);
         return wlanLevel;
     }
