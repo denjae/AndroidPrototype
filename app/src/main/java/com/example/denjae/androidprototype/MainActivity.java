@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -35,7 +36,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     TextView threatLevelOutput;
     EditText cityInput;
     int foursqareLevel;
-    AsyncRequest asyncRequest;
+    AsyncRequest asyncRequestFourSquare;
+    AsyncRequest asyncRequestWlan;
     JSONObject json;
     JSONObject jsonWlan;
     JSONArray jsonArray;
@@ -56,7 +58,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         findVIewsById();
         sendButton.setOnClickListener(this);
         recreate.setOnClickListener(this);
-        asyncRequest = new AsyncRequest(progressBar);
+        asyncRequestFourSquare = new AsyncRequest(progressBar);
+        asyncRequestWlan = new AsyncRequest(progressBar);
     }
 
 
@@ -147,18 +150,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
         foursqareLevel = 0;
         String urlFoursquare = "https://api.foursquare.com/v2/venues/search?near=" + location + "&&novelty=new&client_id=BXBK3ZES42YG5KDEBCCFCOKZTYKZIP1LYZYXCJCGNO2ORTB5&client_secret=KE53YHPKFWUS4LJ5JLU1EFOKUPPDBFDFZWZINVBK0QMHIATA&v=20140726";
         json = new JSONObject();
-        json = asyncRequest.execute(urlFoursquare).get();
+        json = asyncRequestFourSquare.execute(urlFoursquare).get();
 
         jsonArray = new JSONArray();
         jsonArray = json.getJSONObject("response").getJSONArray("venues");
         //Werte aus dem json-Objekt abfragen
-        Log.d("debug", "Created json Array" + jsonArray);
         for (int i = 0; i < jsonArray.length(); i++) {
             foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("checkinsCount");
             foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("tipCount");
             foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("usersCount");
         }
-        Log.d("debug", "Created json stats" + jsonArray);
+
         Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
 
         return foursqareLevel;
@@ -178,8 +180,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Address adress = address.get(0);
             lat =  adress.getLatitude();
             lon =  adress.getLongitude();
-            Log.d("debug", "lat" +lat);
-            Log.d("debug", "lon" +lon);
 
         } catch (Exception e) {
             Log.d("debug", "Fehler beim Erhalt lat und lon");
@@ -189,9 +189,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         try {
             jsonWlan = new JSONObject();
-            jsonWlan =  asyncRequest.execute(urlWlan).get();
-            Log.d("debug", "TestString" + jsonWlan);
-        }
+            jsonWlan =  asyncRequestWlan.execute(urlWlan).get();
+                   }
         catch (Exception e){
             Log.d("debug","Fehler bei Erhalt wlan Zeug" );
         }
@@ -204,7 +203,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         wlanLevel= tmp.length();
 
-        Log.d("debug", "Laenge"+ wlanLevel);
+        Log.d("debug", "Laenge" + wlanLevel);
         return wlanLevel;
     }
 }
