@@ -133,12 +133,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         foursquare = threatFoursqure(location);
         wlan = threatWlan(location);
         result = wlan + foursquare;
+        Log.d("debug", "Resultat Foursquare" + foursquare);
+        Log.d("debug", "Resultat Signal" + wlan);
+        Log.d("debug", "Resultat" + result);
 
 
-        if (result ==3 || result ==4) {
+        if (result <=3) {
             threatLevelOutput.setText("Geringer Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.GREEN);
-        } else if (result ==5 || result ==6) {
+        } else if (result ==4) {
             threatLevelOutput.setText("Mittlerer Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.YELLOW);
         } else {
@@ -171,7 +174,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             resultFoursquare = 3;
         }
         Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
-        return foursqareLevel;
+        return resultFoursquare;
     }
 
     public int threatWlan(String location) throws IOException, ExecutionException, InterruptedException {
@@ -214,7 +217,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         } else {
             wlanLevel = 4;
         }
-        Log.d("debug", "Laenge" + wlanLevel);
+        Log.d("debug", "Menge der netze" + tmp.length());
         return wlanLevel;
     }
 }
