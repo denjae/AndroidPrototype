@@ -2,7 +2,6 @@ package com.example.denjae.androidprototype;
 
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -45,7 +44,6 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
                 try {
                     responseJson = new JSONObject(out.toString());
                 } catch (JSONException e) {
-                    Log.d("debug", "ERROR parsing the json object");
                 }
             } else {
                 //Verbindung schließen
@@ -53,9 +51,7 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
                 throw new IOException(statusLine.getReasonPhrase());
             }
         } catch (ClientProtocolException e) {
-            Log.d("debug", "ERROR receiving HTTP");
         } catch (IOException e) {
-            Log.d("debug", "ERROR receiving HTTP");
         }
         return responseJson;
 
@@ -65,14 +61,11 @@ public class AsyncRequest extends AsyncTask<String, String, JSONObject> {
     @Override
     protected void onPreExecute() {
         this.progressBar.setVisibility(View.VISIBLE);
-        Log.d("debug", "onPreExecute called");
     }
 
     //Wenn die Abfrage abgeschlossen ist, wird der Ladebalken entfernt
     @Override
     protected void onPostExecute(JSONObject resultJson) {
         this.progressBar.setVisibility(View.INVISIBLE);
-        Log.d("debug", "onPostExecute called");
-
     }
 }

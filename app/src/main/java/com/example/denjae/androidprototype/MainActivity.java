@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -101,6 +100,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         if (view == sendButton) {
             try {
+                //Fuehrt die Methode zur Berechnung des Bedrhohungsgrades aus
                 threatLevel(cityInput.getText().toString());
                 //Versteckt die Tastatur nach Absenden der Anfrage
                 InputMethodManager inputManager = (InputMethodManager)
@@ -130,18 +130,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     //Es werden die ermittelten Werte zusammengetragen und daraus der Bedrohungsgrad bestimmt. Die if-Anweisungen bestimmen Bedrohungsgrad und die Färbung der Ausgabebox
     public void threatLevel(String location) throws InterruptedException, ExecutionException, JSONException, IOException {
+        //Speichert den Rueckgabewert der Methode von Foursquare
         foursquare = threatFoursqure(location);
-        wlan = threatWlan(location);
+        //Speichert den Rueckgabewert der Methode von OpenSignal
+        wlan = threatSignal(location);
+        //Addiert die Rueckgabewerte
         result = wlan + foursquare;
-        Log.d("debug", "Resultat Foursquare" + foursquare);
-        Log.d("debug", "Resultat Signal" + wlan);
-        Log.d("debug", "Resultat" + result);
 
-
-        if (result <=3) {
+        //Bestimmt den Bedrohungsgrad, resultierend auf der Summe der Einzelbedrohungen. Setzt Hintergrundfarbe und Text des Ausgabefensters
+        if (result <= 3) {
             threatLevelOutput.setText("Geringer Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.GREEN);
-        } else if (result ==4) {
+        } else if (result == 4) {
             threatLevelOutput.setText("Mittlerer Bedrohungsgrad");
             threatLevelOutput.setBackgroundColor(Color.YELLOW);
         } else {
@@ -165,7 +165,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("tipCount");
             foursqareLevel += jsonArray.getJSONObject(i).getJSONObject("stats").getInt("usersCount");
         }
-
+        //Setzen des Rueckgabewertes, in Abhaengigkeit des ermittelten Wertes
         if (foursqareLevel <= 2500) {
             resultFoursquare = 1;
         } else if (foursqareLevel > 2500 && foursqareLevel <= 12500) {
@@ -173,15 +173,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         } else {
             resultFoursquare = 3;
         }
-        Log.d("debug", "Ermitteltes Level Foursquare " + foursqareLevel);
         return resultFoursquare;
     }
 
-    public int threatWlan(String location) throws IOException, ExecutionException, InterruptedException {
+    //Bestimmt anhand der Informationen von OpenSignal einen Teil des Bedrohungsgrades
+    public int threatSignal(String location) throws IOException, ExecutionException, InterruptedException {
         Geocoder coder = new Geocoder(this);
         List<Address> address;
         wlanLevel = 0;
-
+        //Wandelt den Ort in Laengen- und Breitengrad
         try {
             address = coder.getFromLocationName(location, 5);
             if (address == null) {
@@ -192,24 +192,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
             lon = adress.getLongitude();
 
         } catch (Exception e) {
-            Log.d("debug", "Fehler beim Erhalt lat und lon");
+
         }
+        //String zur Abfrage der Werte
         String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat=" + lat + "&lng=" + lon + "&distance=10&apikey=e65336073b1a9853cd5755e92dba465c";
-        Log.d("debug", "URL" + urlWlan);
 
         try {
             jsonWlan = new JSONObject();
             jsonWlan = asyncRequestWlan.execute(urlWlan).get();
         } catch (Exception e) {
-            Log.d("debug", "Fehler bei Erhalt wlan Zeug");
         }
 
         try {
             tmp = jsonWlan.getJSONObject("networkRank");
         } catch (JSONException e) {
-            Log.d("debug", "Fehler beim Erstellen tmp-Objekt");
         }
-
+        //Setzt Rueckgabewert. Bei Verfuegbarkeit aller Netze ist dieser 1 (+1 wegen Datenintegritaet)
         if (tmp.length() == 4) {
             wlanLevel = 2;
         } else if (tmp.length() == 3) {
@@ -217,7 +215,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         } else {
             wlanLevel = 4;
         }
-        Log.d("debug", "Menge der netze" + tmp.length());
         return wlanLevel;
     }
 }
