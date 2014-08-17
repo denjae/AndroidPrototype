@@ -195,7 +195,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         }
         //String zur Abfrage der Werte
-        String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat=" + lat + "&lng=" + lon + "&distance=10&apikey=e65336073b1a9853cd5755e92dba465c";
+        String urlWlan = "http://api.opensignal.com/v2/networkrank.json?lat=" + lat + "&lng=" + lon + "&distance=5&apikey=e65336073b1a9853cd5755e92dba465c";
 
         try {
             jsonWlan = new JSONObject();
